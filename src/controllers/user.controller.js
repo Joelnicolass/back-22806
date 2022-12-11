@@ -3,11 +3,11 @@ import User from "../models/user.model.js";
 class UserController {
   static async getAllUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find({}, { _id: 1, email: 1 });
       res.status(200).json({ users });
       return;
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: "Internal Server Error" });
       return;
     }
   }
@@ -65,6 +65,27 @@ class UserController {
         new: true,
       });
       res.status(200).json({ updateUser });
+      return;
+    } catch {
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+  }
+
+  static async deleteUser(req, res) {
+    const { email } = req.params;
+
+    console.log(email);
+
+    try {
+      const deleteUser = await User.findOneAndDelete({ email });
+
+      if (!deleteUser) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      res.status(200).json({ deleteUser });
       return;
     } catch {
       res.status(500).json({ error: "Internal Server Error" });

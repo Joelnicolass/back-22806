@@ -1,15 +1,13 @@
-//const router = require('express').Router()
-
 import { Router } from "express";
 import UserController from "../controllers/user.controller.js";
+import { isValidToken } from "../middlewares/isValidToken.js";
 
 const router = Router();
 
-router.get("/", UserController.getAllUsers);
-router.get("/:email", UserController.getByEmail);
-router.post("/", UserController.createUser);
-router.put("/:email", UserController.updateUser);
-// router.delete("/:emial", UserController.deleteUser); -> findAndDelete
+router.get("/", isValidToken, UserController.getAllUsers);
+router.get("/:email", isValidToken, UserController.getByEmail);
+router.post("/", isValidToken, UserController.createUser);
+router.put("/:email", isValidToken, UserController.updateUser);
+router.delete("/:email", isValidToken, UserController.deleteUser);
 
-//module.exports = router;
 export default router;
